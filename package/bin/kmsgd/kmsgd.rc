@@ -1,0 +1,17 @@
+#
+# init scriptures for kmsgd persistent logging.
+#
+on post-fs-data
+    mkdir /data/vendor/kmsgd 0700
+    start kmsgd
+
+on property:ro.bootmode=charger
+    stop kmsgd
+
+# kmsgd service
+service kmsgd /vendor/bin/kmsgd -f /data/vendor/kmsgd/kmsg
+    disabled
+    user root
+    group log root logd
+    writepid /dev/cpuset/system-background/tasks
+    oom_score_adjust -600

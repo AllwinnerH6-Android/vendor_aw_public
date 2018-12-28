@@ -1,0 +1,14 @@
+cc_binary {
+    srcs: ["kmsgd.cpp"],
+    name: "kmsgd",
+    init_rc: ["kmsgd.rc"],
+    proprietary: true,
+    shared_libs: [
+        "libbase",
+    ],
+    cflags: [
+        "-Wall",
+        "-Wno-unused-parameter",
+        "-Werror",
+    ]
+}

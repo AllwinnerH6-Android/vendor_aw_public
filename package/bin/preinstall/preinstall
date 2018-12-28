@@ -1,0 +1,10 @@
+#!/system/bin/sh
+
+boot_count=$(settings get global boot_count)
+setprop log.boot_count $boot_count
+if [ $boot_count -eq 1 ]; then
+    apks=$(find /system/preinstall /vendor/preinstall -name *.apk)
+    for apk in $apks; do
+        cmd package install $apk
+    done
+fi

@@ -1,0 +1,14 @@
+service radio_monitor-daemon /vendor/bin/hw/radio_monitor
+    class main
+    user root
+    group system
+    capabilities BLOCK_SUSPEND
+
+on property:vts.native_server.on=1
+    setprop vendor.vts.native_server.on 1
+on property:vts.native_server.on=0
+    setprop vendor.vts.native_server.on 0
+on property:sys.boot_completed=1
+    setprop vendor.sys.boot_completed 1
+on property:sys.boot_completed=0
+    setprop vendor.sys.boot_completed 0
