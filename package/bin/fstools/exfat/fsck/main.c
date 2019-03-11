@@ -27,6 +27,10 @@
 #include <unistd.h>
 
 #define exfat_debug(format, ...)
+//check file and directories max num
+#define FILE_CHECK_NUM 3000
+//HDD whose capacity is larger than 500G will not be fsck.
+#define HDD_CAPACITY 500
 
 uint64_t files_count, directories_count;
 
@@ -107,12 +111,20 @@ static void dirck(struct exfat* ef, const char* path)
 		if (node->attrib & EXFAT_ATTRIB_DIR)
 		{
 			directories_count++;
+            if(files_count+directories_count > FILE_CHECK_NUM){
+                printf("files and directories number > %d,skip check the remaining files and directories\n",FILE_CHECK_NUM);
+                break;
+            }
 			dirck(ef, entry_path);
 		}
 		else
 		{
 			files_count++;
 			nodeck(ef, node);
+            if(files_count+directories_count > FILE_CHECK_NUM){
+                printf("files and directories number > %d,skip check the remaining files and directories\n",FILE_CHECK_NUM);
+                break;
+            }
 		}
 		exfat_put_node(ef, node);
 	}
@@ -124,6 +136,11 @@ static void dirck(struct exfat* ef, const char* path)
 static void fsck(struct exfat* ef)
 {
 	exfat_print_info(ef->sb, exfat_count_free_clusters(ef));
+	off_t total_space = le64_to_cpu(ef->sb->sector_count) * SECTOR_SIZE(*(ef->sb));
+    if(total_space/1024/1024/1024 > HDD_CAPACITY){
+        printf("total_space > %dGB,we think this is a HDD and we donot fsck HDD\n",HDD_CAPACITY);
+        return;
+    }
 	dirck(ef, "");
 }
 

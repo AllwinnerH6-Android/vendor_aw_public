@@ -14,6 +14,7 @@
 #include <string>
 
 #include <android-base/stringprintf.h>
+#include <android-base/logging.h>
 
 static int logRotateSizeKBytes = 1024;
 static int maxRotatedLogs = 16;
@@ -107,7 +108,7 @@ int main(int argc, char **argv) {
     int fd;
 
     int opt;
-    while ((opt = getopt(argc, argv, "f:n:")) != -1) {
+    while ((opt = getopt(argc, argv, "f:n:r:")) != -1) {
         switch (opt) {
             case 'f':
                 outputFileName = optarg;
@@ -129,6 +130,9 @@ int main(int argc, char **argv) {
     // maxRotatedLogs == 30
     //   -> log10(30) == 1.477
     //   -> maxRotationCountDigits == 2
+    LOG(WARNING) << "logRotateSizeKBytes is "<< logRotateSizeKBytes;
+    LOG(WARNING) << "maxRotatedLogs is "<< maxRotatedLogs;
+    LOG(WARNING) << "outputFileName is "<< outputFileName;
     maxRotationCountDigits =
         (maxRotatedLogs > 0)
             ? (int)(floor(log10(maxRotatedLogs) + 1))

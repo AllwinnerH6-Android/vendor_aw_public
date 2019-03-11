@@ -9,7 +9,7 @@ on property:ro.bootmode=charger
     stop kmsgd
 
 # kmsgd service
-service kmsgd /vendor/bin/kmsgd -f /data/vendor/kmsgd/kmsg
+service kmsgd /vendor/bin/kmsgd -f /data/vendor/kmsgd/kmsg -r 25000 -n 4
     disabled
     user root
     group log root logd
